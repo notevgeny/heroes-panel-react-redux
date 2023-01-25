@@ -1,0 +1,55 @@
+{
+  "heroes": [
+    {
+      "id": 1,
+      "name": "Первый герой",
+      "description": "Первый герой в рейтинге!",
+      "element": "fire"
+    },
+    {
+      "id": 2,
+      "name": "Неизвестный герой",
+      "description": "Скрывающийся в тени",
+      "element": "wind"
+    },
+    {
+      "id": 3,
+      "name": "Морской герой",
+      "description": "Как аквамен, но не из DC",
+      "element": "water"
+    },
+    {
+      "id": "dc4b099e-aad1-4b48-b748-9b9b8462f957",
+      "name": "Валера",
+      "description": "Тот еще фрукт",
+      "element": "earth"
+    }
+  ],
+  "filters": [
+    {
+      "element": "all",
+      "label": "Все",
+      "classname": "btn-outline-dark"
+    },
+    {
+      "element": "fire",
+      "label": "Огонь",
+      "classname": "btn-danger"
+    },
+    {
+      "element": "water",
+      "label": "Вода",
+      "classname": "btn-primary"
+    },
+    {
+      "element": "wind",
+      "label": "Ветер",
+      "classname": "btn-success"
+    },
+    {
+      "element": "earth",
+      "label": "Земля",
+      "classname": "btn-secondary"
+    }
+  ]
+}
