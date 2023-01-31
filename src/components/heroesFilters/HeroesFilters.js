@@ -1,15 +1,9 @@
 
-// Задача для этого компонента:
-// Фильтры должны формироваться на основании загруженных данных
-// Фильтры должны отображать только нужных героев при выборе
-// Активный фильтр имеет класс active
-// + Изменять json-файл для удобства МОЖНО!
-// + Представьте, что вы попросили бэкенд-разработчика об этом
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {useHttp} from '../../hooks/http.hook';
+import store from '../../store';
 
-import { fetchFilters, filtersSetActive } from '../../actions';
+import { filtersSetActive, fetchFilters, selectAll } from './filtersSlice';
 
 import Spinner from '../spinner/Spinner';
 
@@ -17,14 +11,13 @@ import classNames from 'classnames';
 
 const HeroesFilters = () => {
 
-    const {filters, filtersLoadingStatus, activeFilter} = useSelector(state => state.filters)
+    const {filtersLoadingStatus, activeFilter} = useSelector(state => state.filters)
+    const filters = selectAll(store.getState())
     const dispatch = useDispatch();
-    const {request} = useHttp();
-
 
     // инициализация фильтров при первом рендере страницы
     useEffect(() => {
-        dispatch(fetchFilters(request));
+        dispatch(fetchFilters());
         // eslint-disable-next-line
     }, []);
 
@@ -67,11 +60,6 @@ const HeroesFilters = () => {
                 <p className="card-text">Отфильтруйте героев по элементам</p>
                 <div className="btn-group">
                     {filtersList}
-                    {/* <button className="btn btn-outline-dark active">Все</button>
-                    <button className="btn btn-danger">Огонь</button>
-                    <button className="btn btn-primary">Вода</button>
-                    <button className="btn btn-success">Ветер</button>
-                    <button className="btn btn-secondary">Земля</button> */}
                 </div>
             </div>
         </div>

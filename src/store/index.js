@@ -1,8 +1,6 @@
-import { createStore, combineReducers, compose, applyMiddleware } from 'redux';
-import reducerHeroes from '../reducers/heroes';
-import reducerFilters from '../reducers/filters';
-// по сути основная его задача - передавать функцию, которая будет что-то выполнять асинхронно: запросы на сервер, таймауты, промисы и т.д. 
-import thunk from 'redux-thunk'
+import { configureStore } from '@reduxjs/toolkit';
+import heroes from '../components/heroesList/heroesSlice'
+import filters from '../components/heroesFilters/filtersSlice';
 
 
 // middleware занимается расширением dispatch
@@ -18,35 +16,46 @@ const stringMiddleware = ({dispatch, getState}) => (next) => (action) => {
 }
 
 // (он же усилитель store) позволяет обрабатывать в dispatch аргументы, отличные от объекта со свойством type - в данном случае обрабатываем string
-const enhancer = (createStore) => (...args) => {
-  const store = createStore(...args);
+// const enhancer = (createStore) => (...args) => {
+//   const store = createStore(...args);
 
-  const oldDispatch = store.dispatch;
-  store.dispatch = (action) => {
-    if (typeof action === 'string'){
-      return oldDispatch({
-        type: action
-      })
-    }
-    return oldDispatch(action)
-  }
-  return store;
-}
+//   const oldDispatch = store.dispatch;
+//   store.dispatch = (action) => {
+//     if (typeof action === 'string'){
+//       return oldDispatch({
+//         type: action
+//       })
+//     }
+//     return oldDispatch(action)
+//   }
+//   return store;
+// }
 
 
 // compose позволяет объединить combineReducers с остальными аргументами - без нее работать не будет
 // важно учитывать порядок функций - сначала enhancers, затем все остальное (в нашем случае devtools)
-const store = createStore( 
-                combineReducers({heroes: reducerHeroes, filters: reducerFilters}),
-                // compose(
-                //  enhancer,
-                //  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-                // )
-                compose(
-                  applyMiddleware(thunk, stringMiddleware),
-                  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__() 
-                )
-              )
+// const store = createStore( 
+//                 combineReducers({heroes: reducerHeroes, filters: reducerFilters}),
+//                 // compose(
+//                 //  enhancer,
+//                 //  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+//                 // )
+//                 compose(
+//                   applyMiddleware(thunk, stringMiddleware),
+//                   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__() 
+//                 )
+//               )
+
+
+const store = configureStore({
+  reducer: {
+    heroes, 
+    filters
+  },
+  middleware: getDefaultMiddleware => getDefaultMiddleware().concat(stringMiddleware),
+  devTools: process.env.NODE_ENV !== 'production',
+  
+})
       
 
 export default store;

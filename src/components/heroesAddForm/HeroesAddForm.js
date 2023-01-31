@@ -1,22 +1,17 @@
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
-import { heroCreated } from "../../actions";
 import { useHttp } from "../../hooks/http.hook";
-
-// Задача для этого компонента:
-// Реализовать создание нового героя с введенными данными. Он должен попадать
-// в общее состояние и отображаться в списке + фильтроваться
-// + Уникальный идентификатор персонажа можно сгенерировать через uuid
-// Усложненная задача:
-// Персонаж создается и в файле json при помощи метода POST
-// + Дополнительно:
-// Элементы <option></option> желательно сформировать на базе
-// данных из фильтров
+import { heroCreated } from "../heroesList/heroesSlice";
+import { selectAll } from "../heroesFilters/filtersSlice";
+import store from "../../store";
 
 const HeroesAddForm = () => {
 
-    const {filters, filtersLoadingStatus} = useSelector(state => state.filters);
+    // достаем из state.filters метод filtersLoadingStatus с помощью useSelector
+    // когда интересующее нас значение в store изменяется, useSelector еще и заставляет весь текущий компонент перерисоваться
+    const {filtersLoadingStatus} = useSelector(state => state.filters);
+    const filters = selectAll(store.getState())
     const dispatch = useDispatch();
     const {request} = useHttp();
 
@@ -58,6 +53,7 @@ const HeroesAddForm = () => {
 
         if (filters && filters.length > 0){
             return filters.map(({element, label}) => {
+                // eslint-disable-next-line
                 if (element === 'all') return;
 
                 return <option key={element} value={element}>{label}</option>
@@ -107,10 +103,6 @@ const HeroesAddForm = () => {
                     onChange={(e) => setHeroElement(e.target.value)}
                     >
                     <option >Я владею элементом...</option>
-                    {/* <option value="fire">Огонь</option>
-                    <option value="water">Вода</option>
-                    <option value="wind">Ветер</option>
-                    <option value="earth">Земля</option> */}
                     {renderFilters(filters, filtersLoadingStatus)}
                 </select>
             </div>
